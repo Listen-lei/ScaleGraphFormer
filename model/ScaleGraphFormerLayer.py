@@ -10,7 +10,7 @@ import warnings
 # --------------------------- PNADegreeScaler ---------------------------
 class ScaleGraphFormerDegreeScaler(nn.Module):
     """
-    Apply PNA-inspired degree scaling to attention-aggregated node features.
+    Apply degree scaling to attention-aggregated node features.
     Inputs:
         wV: (N, H, D) - per-node, per-head aggregated features
         log_deg: (N,) or (N,1,1) - log(degree+1)
