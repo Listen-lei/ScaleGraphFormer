@@ -7,7 +7,7 @@ import opt_einsum as oe
 from typing import Optional, List
 import warnings
 
-# --------------------------- PNADegreeScaler ---------------------------
+# --------------------------- DegreeScaler ---------------------------
 class ScaleGraphFormerDegreeScaler(nn.Module):
     """
     Apply degree scaling to attention-aggregated node features.
@@ -87,7 +87,7 @@ class ScaleGraphFormerAttentionLayer(nn.Module):
             self.VeRow = nn.Parameter(torch.zeros(out_dim, num_heads, out_dim))
             nn.init.xavier_normal_(self.VeRow)
 
-        # PNA-inspired degree scaler
+        # Degree scaler
         self.use_pna_scaler = use_pna_scaler
         if self.use_pna_scaler:
             if pna_scalers is None:
@@ -128,7 +128,7 @@ class ScaleGraphFormerAttentionLayer(nn.Module):
             rowV = oe.contract("nhd, dhc->nhc", rowV, self.VeRow, backend="torch")
             batch.wV = batch.wV + rowV
 
-        # Apply PNA-like degree scaler
+        # Apply degree scaler
         if self.use_pna_scaler:
             deg = degree(batch.edge_index[1], num_nodes=batch.x.size(0), dtype=batch.x.dtype).to(batch.x.device)
             log_deg = torch.log1p(deg)
